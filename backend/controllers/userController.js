@@ -1,4 +1,4 @@
-import { User } from "../models/User";
+import User from "../models/User.js";
 
 export const registerUser = async (req, res) => {
     try {
@@ -11,7 +11,7 @@ export const registerUser = async (req, res) => {
                 sucess:false,
                 message : "Campos incompletos"})    
         }
-        const existUser = await User.findOne((email));
+        const existUser = await User.findOne({email});
         if(existUser){
             return res.status(400).json({
                 sucess:false,
