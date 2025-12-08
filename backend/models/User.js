@@ -4,9 +4,14 @@ import bcrypt from "bcryptjs";
 const UserSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
-  password: { type: String, required: true }
-});
-
+  password: { type: String, required: true },
+  isVerified: { type: Boolean, default: false },
+  isLoggedIn: { type: Boolean, default: false },
+  token : { type: String,default: null },
+  otp: { type: String, default: null },
+  otpExpiry: { type: Date, default: null },
+}, { timestamps: true });
+// { timestamps: true } esto crea createdAt y updaateAt automaticamente en la bd
 UserSchema.pre("save", async function () {
   if (!this.isModified("password")) {
     return ;
@@ -17,4 +22,4 @@ UserSchema.pre("save", async function () {
 UserSchema.methods.matchPassword = async function (passIngresada) {
   return await bcrypt.compare(passIngresada, this.password);
 }
-export default mongoose.model("User", UserSchema);
+export const User = mongoose.model("User", UserSchema);
