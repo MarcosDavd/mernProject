@@ -2,7 +2,7 @@ import { verifyMail } from "../emailVerify/verifyMail.js";
 import User from "../models/User.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-
+import Session from "../models/sessionModel.js";
 export const registerUser = async (req, res) => {
     try {
         // destructuring assignment
@@ -85,6 +85,71 @@ export const verification = async (req,res) => {
         return res.status(500).json({
             success:false,
             message:error.message
+        })
+    }
+}
+export const loginUser = async (req,res)=>{
+    try {
+        // verifico que se ingresa email y password
+        const {email, password} = req.body;
+        if(!email || !password){
+            return res.status(400).json({
+                success:false,
+                message:"All fields are required"
+            })
+        }
+        // Verifico que el user este en el sistema
+        const user = await User.findOne({email});
+        if(!user){
+            return res.status(401).json({
+                success:false,
+                message:"Unauthorized acces"
+            })
+        }
+        // comom ya llegue aca significa que el usuario existe entonces
+        // verifico su password
+        const passwordCheck = await bcrypt.compare(password,user.password)
+        if(!passwordCheck){
+            return res.status(401).json({
+                success:false,
+                message:"Contraseña incorrecta"
+            })
+        }
+        //check de usuario verificadp
+        if(user.isVerified === false){
+            return res.status(403).json({
+                success:false,
+                message:"Please verify your email to login"
+            })
+        }
+        // check para session activa(si esta logueado en cualquier dispositivo) 
+        // Si existe una session activa, la elimino para que el usuario pueda iniciar sesion en un nuevo dispositivo
+        // Evito que el usuario tenga varias sesiones abiertas al mismo tiempo
+
+        const existingSession = await Session.findOne({userId:user._id});
+        if(existingSession){
+            await Session.deleteOne({userId:user._id});
+        }
+        // Creo una nueva session para el usuario
+        await Session.create({userId:user._id})
+        
+        // genero un tokens
+        const accesToken = jwt.sign({id:user._id},process.env.SECRET_KEY,{expiresIn:"10d"})
+        const refreshToken = jwt.sign({id:user._id},process.env.SECRET_KEY,{expiresIn:"30d"})
+        
+        user.isLoggedIn = true;
+        await user.save();
+        return res.status(200).json({
+            success:true,
+            message:`Welcome back ${user.username}`,
+            accesToken,
+            refreshToken,
+            user
+        })
+    } catch (error) {
+        return res.status(500).json({
+            success:false,
+            message: error.message
         })
     }
 }
