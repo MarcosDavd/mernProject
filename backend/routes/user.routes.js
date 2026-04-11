@@ -1,5 +1,6 @@
 import express from 'express';
-import { loginUser,registerUser, verification } from '../controllers/userController.js';
+import { loginUser,logoutUser,registerUser, verification } from '../controllers/userController.js';
+import { isAuthenticated } from '../middleware/isAuthenticated.js';
 
 
 const router = express.Router();
@@ -7,4 +8,7 @@ const router = express.Router();
 router.post('/register',registerUser)
 router.post('/verify',verification)
 router.post('/login',loginUser)
+// antes de cerrar sesion verifico que el usuario este autenticado
+//  es decir que tenga un token valido para poder cerrar sesion
+router.post('/logout',isAuthenticated, logoutUser)
 export default router; 
