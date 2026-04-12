@@ -1,4 +1,5 @@
 import { verifyMail } from "../emailVerify/verifyMail.js";
+import { sendOtpMail } from "../emailVerify/sendOtpMail.js";
 import User from "../models/User.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
@@ -163,6 +164,33 @@ export const logoutUser = async (req, res)=>{
             message:"User logged out successfully"
         })
          
+    } catch (error) {
+        return res.status(500).json({
+            success:false,
+            message:error.message
+        })
+    }
+}
+export const forgotPassword = async (req, res)=>{
+    try {
+        const {email}= req.body;
+        const user = await User.findOne({email});
+        if(!user){
+            return res.status(404).json({
+                success:false,
+                message:"User not found"
+            })
+        }
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
+        const expiry = new Date(Date.now() + 10 * 60 * 1000);
+        user.otp = otp;
+        user.otpExpiry = expiry;
+        await user.save();
+        await sendOtpMail(email, otp);
+        return res.status(200).json({
+            sucess:true,
+            message:"OTP sent to email"
+        })
     } catch (error) {
         return res.status(500).json({
             success:false,
