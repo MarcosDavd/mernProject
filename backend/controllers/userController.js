@@ -248,3 +248,31 @@ export const verifyOTP = async (req,res)=>{
         })
     }
 }
+export const changePassword = async(req, res)=>{
+    const newPassword,confirmPassword = req.body;
+    const email = req.params.email;
+    if(!newPassword || !confirmPassword){
+        return res.status(400).json({
+            succes:false,
+            message:"All fields are required"
+        })
+    }
+    if(newPassword !== confirmPassword){
+        return res.status(400).json({
+            success:false,
+            message:" Passwords do not match"
+        })
+    }
+
+    try {
+        const user = await User.findOne({email});
+        if(!user){
+            return res.status(400).json({
+                success:false,
+                message:"User not found"
+            })
+        }
+    } catch (error) {
+        
+    }
+}
