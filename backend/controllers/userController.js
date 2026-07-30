@@ -4,6 +4,8 @@ import User from "../models/User.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import Session from "../models/sessionModel.js";
+
+
 export const registerUser = async (req, res) => {
     try {
         // destructuring assignment
@@ -41,7 +43,6 @@ export const registerUser = async (req, res) => {
         })
     }
 }
-
 export const verification = async (req,res) => {
     try {
         const authHeader = req.headers.authorization;

@@ -1,11 +1,11 @@
 import express from 'express';
 import { forgotPassword, loginUser,logoutUser,registerUser, verification,verifyOTP,changePassword } from '../controllers/userController.js';
 import { isAuthenticated } from '../middleware/isAuthenticated.js';
-
+import { validateUser,userSchema } from '../validators/userValidate.js';
 
 const router = express.Router();
 // al llamar a registerUser se ejecuita  la funcion del contrller para registrar un usuario
-router.post('/register',registerUser)
+router.post('/register',validateUser(userSchema),registerUser)
 router.post('/verify',verification)
 router.post('/login',loginUser)
 // antes de cerrar sesion verifico que el usuario este autenticado
