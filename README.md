@@ -1,6 +1,7 @@
 # Proyecto MERN - Autenticación y Autorización de Usuarios
 
 ![MERN Stack Project](./media/stack.png)
+##
 Este proyecto es una aplicación web desarrollada con el stack MERN (MongoDB, Express.js, React y Node.js) para implementar autenticación y autorización de usuarios.
 
 ## ¿Qué incluye?
