@@ -28,7 +28,7 @@ const Signup = () => {
         }
       })
       if(res.data.success){
-        navigate('/login')
+        navigate('/verify')
         toast.success(res.data.message);
       }
     } catch (error) {

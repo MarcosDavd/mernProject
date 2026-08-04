@@ -3,7 +3,11 @@ import {createBrowserRouter, RouterProvider}from 'react-router-dom';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
-
+import VerifyEmail from './pages/VerifyEmail';
+import Verify from './pages/Verify';
+import Navbar from './components/Navbar';
+import ProtectedRoute from './components/ProtectedRoute';
+import ForgotPassword from './pages/ForgotPassword';
 /*
 RouterProvider es un componente genérico 
 — no sabe de antemano cuáles son tus rutas. 
@@ -12,8 +16,8 @@ para saber qué mapeo de URLs → componentes tiene que usar.
 */
 const router = createBrowserRouter([
   {
-    path:'/',
-    element:<Home/>,
+    path:'/home',
+    element:<><ProtectedRoute></ProtectedRoute><Navbar/><Home/></>,
   },
   {
     path:'/login',
@@ -22,6 +26,15 @@ const router = createBrowserRouter([
   {
     path:'/signup',
     element:<Signup/>
+  },{
+    path:'/verify',
+    element:<VerifyEmail/>
+  },{
+    path:'/verify/:token',
+    element: <Verify/>
+  },{
+    path:'/forgot-password',
+    element:<ForgotPassword/>
   }
 
 ]);

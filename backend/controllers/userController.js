@@ -11,16 +11,17 @@ export const registerUser = async (req, res) => {
         // destructuring assignment
      //js va a busar en el body del request los campos username, email y password y los asigna debidamente
         const {username,email,password} = req.body
+        console.log(req.body)
         if(!username || !email || !password){
             console.log("campos username,email o password incompletos ");
             return res.status(400).json({
-                sucess:false,
+                success:false,
                 message : "Campos incompletos"})    
         }
         const existUser = await User.findOne({email});
         if(existUser){
             return res.status(400).json({
-                sucess:false,
+                success:false,
                 message : "Este usuario ya existe",
             })
         }
@@ -34,11 +35,11 @@ export const registerUser = async (req, res) => {
         verifyMail(token,email)
         newUser.token=token;
         await newUser.save();
-        return res.status(201).json({sucess:true, message:"Se ha registrado el usuario correctamente",data:newUser}); 
+        return res.status(201).json({success:true, message:"Se ha registrado el usuario correctamente",data:newUser}); 
     } catch (error) {
         console.log("Error al registrar el usuario", error);
         return res.status(500).json({
-            sucess:false,
+            success:false,
             message : "Error en el servidor"
         })
     }
@@ -91,6 +92,7 @@ export const verification = async (req,res) => {
     }
 }
 export const loginUser = async (req,res)=>{
+    
     try {
         // verifico que se ingresa email y password
         const {email, password} = req.body;
@@ -105,7 +107,7 @@ export const loginUser = async (req,res)=>{
         if(!user){
             return res.status(401).json({
                 success:false,
-                message:"Unauthorized acces"
+                message:"Invalid email or password"
             })
         }
         // comom ya llegue aca significa que el usuario existe entonces
@@ -114,7 +116,7 @@ export const loginUser = async (req,res)=>{
         if(!passwordCheck){
             return res.status(401).json({
                 success:false,
-                message:"Contraseña incorrecta"
+                message:"Invalid email or password"
             })
         }
         //check de usuario verificadp
@@ -136,7 +138,7 @@ export const loginUser = async (req,res)=>{
         await Session.create({userId:user._id})
         
         // genero un tokens
-        const accesToken = jwt.sign({id:user._id},process.env.SECRET_KEY,{expiresIn:"10d"})
+        const accessToken = jwt.sign({id:user._id},process.env.SECRET_KEY,{expiresIn:"10d"})
         const refreshToken = jwt.sign({id:user._id},process.env.SECRET_KEY,{expiresIn:"30d"})
         
         user.isLoggedIn = true;
@@ -144,7 +146,7 @@ export const loginUser = async (req,res)=>{
         return res.status(200).json({
             success:true,
             message:`Welcome back ${user.username}`,
-            accesToken,
+            accessToken,
             refreshToken,
             user
         })
