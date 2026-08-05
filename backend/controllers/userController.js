@@ -191,7 +191,7 @@ export const forgotPassword = async (req, res)=>{
         await user.save();
         await sendOtpMail(email, otp);
         return res.status(200).json({
-            sucess:true,
+            success:true,
             message:"OTP sent to email"
         })
     } catch (error) {
