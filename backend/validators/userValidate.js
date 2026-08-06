@@ -25,3 +25,19 @@ export const validateUser = (schema) => async(req,res,next) =>{
         })
     }
 }
+export const loginSchema = yup.object({
+    email: yup
+        .string()
+        .email('El email no es válido')
+        .required(),
+    password: yup
+        .string()
+        .required()
+});
+
+export const forgotPasswordSchema = yup.object({
+    email: yup
+        .string()
+        .email('El email no es válido')
+        .required()
+});

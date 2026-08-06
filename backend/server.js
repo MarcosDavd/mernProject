@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 dotenv.config();
 import User from "./models/User.js";
 import userRoute from "./routes/user.routes.js";
+import { sanitizeInputs } from "./middleware/sanitize.js";
 
 const app = express();
 app.use(cors({
@@ -19,7 +20,7 @@ connectDB();
 // me ayuda parsear los datos enviados desde el cliente a formto json
 // se ejcuta antes de cualquier peticion
 app.use(express.json());
-
+app.use(sanitizeInputs);
 
 // aca se declara la ruta pricipal para los endpints de usuarios
 // es decir declrar localhst:5000/user 

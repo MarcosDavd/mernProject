@@ -1,17 +1,17 @@
 import express from 'express';
 import { forgotPassword, loginUser,logoutUser,registerUser, verification,verifyOTP,changePassword } from '../controllers/userController.js';
 import { isAuthenticated } from '../middleware/isAuthenticated.js';
-import { validateUser,userSchema } from '../validators/userValidate.js';
+import { validateUser,userSchema,forgotPasswordSchema,loginSchema } from '../validators/userValidate.js';
 
 const router = express.Router();
 // al llamar a registerUser se ejecuita  la funcion del contrller para registrar un usuario
 router.post('/register',validateUser(userSchema),registerUser)
 router.post('/verify',verification)
-router.post('/login',loginUser)
+router.post('/login',validateUser(loginSchema),loginUser)
 // antes de cerrar sesion verifico que el usuario este autenticado
 //  es decir que tenga un token valido para poder cerrar sesion
 router.post('/logout',isAuthenticated, logoutUser)
-router.post('/forgot-password',forgotPassword);
+router.post('/forgot-password',validateUser(forgotPasswordSchema),forgotPassword);
 router.post('/verify-otp/:email',verifyOTP);
 router.post('/change-password/:email',changePassword);
 export default router; 
