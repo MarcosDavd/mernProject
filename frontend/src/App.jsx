@@ -8,6 +8,8 @@ import Verify from './pages/Verify';
 import Navbar from './components/Navbar';
 import ProtectedRoute from './components/ProtectedRoute';
 import ForgotPassword from './pages/ForgotPassword';
+import VerifyOTP from './pages/VerifyOTP';
+import ChangePassword from './pages/ChangePassword';
 /*
 RouterProvider es un componente genérico 
 — no sabe de antemano cuáles son tus rutas. 
@@ -35,6 +37,12 @@ const router = createBrowserRouter([
   },{
     path:'/forgot-password',
     element:<ForgotPassword/>
+  },{
+    path:'/verify-otp/:email',
+    element:<VerifyOTP/>
+  },{
+    path:'/change-password/:email',
+    element:<ChangePassword/>
   }
 
 ]);
