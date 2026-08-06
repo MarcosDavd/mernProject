@@ -125,6 +125,9 @@ const Login = () => {
                       Login in to your account..
                     </>) : "Login"}
                 </Button>
+                <Button onClick={()=>{navigate('/signup')}} type="submit" className="w-full bg-chart-3">
+                  SignUp
+                </Button>
               </CardFooter>
             </Card>
           </div>

@@ -1,6 +1,6 @@
 import { BookA, BookOpen, LogOut, User } from 'lucide-react'
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -18,8 +18,7 @@ import { toast } from 'sonner'
 const Navbar = () => {
     const { user, setUser } = getData()
     const accessToken = localStorage.getItem("accessToken")
-    console.log(user);
-
+    const navigate = useNavigate() 
     const logoutHandler = async () => {
         try {
             const res = await axios.post(`http://localhost:5000/user/logout`, {}, {
@@ -31,6 +30,7 @@ const Navbar = () => {
                 setUser(null)
                 toast.success(res.data.message)
                 localStorage.clear()
+                navigate('/login')
             }
         } catch (error) {
             console.log(error);
@@ -69,7 +69,7 @@ const Navbar = () => {
                                         <DropdownMenuItem onClick={logoutHandler}><LogOut />Logout</DropdownMenuItem>
                                     </DropdownMenuGroup>
                                 </DropdownMenuContent>
-                            </DropdownMenu> : <Link to={'/login'}><li>Login</li></Link>
+                            </DropdownMenu> : <Link to={'/login'}><li>Login </li></Link>
                         }
                     </ul>
                 </div>
